@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import *
+from django.core.mail import send_mail
+from django.conf import settings
 
 class Address(View):
     def get(self, request):
@@ -51,6 +53,13 @@ class Register(View):
                 shahar = request.POST['sh'],
                 mamlakat = request.POST['m'],
             )
+            subject = 'Alistyle'
+            message = ' Alistylega xush kelibsiz! '\
+                        'Maroqli xarid tilaymiz!'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [request.POST['email'], ]
+            send_mail(subject, message, email_from, recipient_list)
+
             return redirect('/user/login/')
         else:
             return redirect('register')
